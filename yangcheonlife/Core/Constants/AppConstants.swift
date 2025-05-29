@@ -34,6 +34,7 @@ public struct AppConstants {
         public static let initialSetupCompleted = "initialSetupCompleted"
         public static let wifiSuggestionEnabled = "wifiSuggestionEnabled"
         public static let lastSeenUpdateVersion = "lastSeenUpdateVersion"
+        public static let liveActivityProgressBarWidth = "liveActivityProgressBarWidth"
         
         // 시간표 저장소 키
         public static let scheduleDataStore = "schedule_data_store"

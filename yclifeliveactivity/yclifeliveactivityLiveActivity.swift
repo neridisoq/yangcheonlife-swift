@@ -114,13 +114,13 @@ struct ClassLiveActivityView: View {
                 // 진행 바
                 ProgressView(value: getProgressValue(context: context), total: 1.0)
                     .progressViewStyle(LinearProgressViewStyle(tint: .orange))
-                    .frame(height: 4)
+                    .frame(width: getProgressBarWidth(), height: 4)
                 
                 Text("남음")
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }
-            .frame(width: 60)
+            .frame(width: max(60, getProgressBarWidth()))
             
             // 다음 시간 (오른쪽)
             VStack(alignment: .trailing, spacing: 8) {
@@ -223,6 +223,11 @@ struct ClassLiveActivityView: View {
         
         let elapsed = totalMinutes - remaining
         return max(0, min(1, elapsed / totalMinutes))
+    }
+    
+    private func getProgressBarWidth() -> CGFloat {
+        let width = SharedUserDefaults.shared.userDefaults.double(forKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth)
+        return width > 0 ? CGFloat(width) : 60.0
     }
 }
 

@@ -83,6 +83,34 @@ struct SettingsTabView: View {
                 }
             }
             
+            // 진행 바 크기 설정
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("진행 바 너비")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                    
+                    Spacer()
+                    
+                    Text(String(format: "%.0f", viewModel.liveActivityProgressBarWidth))
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                
+                Slider(
+                    value: $viewModel.liveActivityProgressBarWidth,
+                    in: 40.0...120.0,
+                    step: 5.0
+                )
+                .onChange(of: viewModel.liveActivityProgressBarWidth) { newWidth in
+                    viewModel.saveLiveActivityProgressBarWidth(newWidth)
+                }
+                
+                Text("라이브 액티비티 진행 바의 길이를 조절합니다")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            
             HStack {
                 if !liveActivityManager.isActivityRunning {
                     Button("시작하기") {

@@ -14,6 +14,7 @@ class SettingsTabViewModel: ObservableObject {
     @Published var physicalEducationAlertTime: Date = Date()
     @Published var cellBackgroundColor: Color = .currentPeriodBackground
     @Published var wifiSuggestionEnabled: Bool = true
+    @Published var liveActivityProgressBarWidth: Double = 60.0
     
     // MARK: - Private Properties
     private let userDefaults = UserDefaults.standard
@@ -35,6 +36,10 @@ class SettingsTabViewModel: ObservableObject {
         notificationsEnabled = userDefaults.bool(forKey: AppConstants.UserDefaultsKeys.notificationsEnabled)
         physicalEducationAlertEnabled = userDefaults.bool(forKey: AppConstants.UserDefaultsKeys.physicalEducationAlertEnabled)
         wifiSuggestionEnabled = userDefaults.object(forKey: AppConstants.UserDefaultsKeys.wifiSuggestionEnabled) as? Bool ?? true
+        liveActivityProgressBarWidth = userDefaults.double(forKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth)
+        
+        // 기본값 설정
+        if liveActivityProgressBarWidth == 0 { liveActivityProgressBarWidth = 60.0 }
         
         // 기본값 설정
         if defaultGrade == 0 { defaultGrade = 1 }
@@ -341,6 +346,17 @@ class SettingsTabViewModel: ObservableObject {
         // 동적 syncKey 생성 (기존 방식)
         let syncKey = "sync_\(key)"
         iCloudSync.syncSetting(localKey: key, syncKey: syncKey, value: value)
+        updateSharedUserDefaults()
+    }
+    
+    /// 라이브 액티비티 진행 바 너비 저장
+    func saveLiveActivityProgressBarWidth(_ width: Double) {
+        liveActivityProgressBarWidth = width
+        userDefaults.set(width, forKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth)
+        
+        // iCloud 동기화
+        iCloudSync.syncSetting(localKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth, syncKey: iCloudSyncService.SyncKeys.liveActivityProgressBarWidth, value: width)
+        
         updateSharedUserDefaults()
     }
 }

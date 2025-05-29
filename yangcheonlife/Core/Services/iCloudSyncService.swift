@@ -19,6 +19,7 @@ class iCloudSyncService: ObservableObject {
         static let physicalEducationAlertTime = "sync_physicalEducationAlertTime"
         static let wifiSuggestionEnabled = "sync_wifiSuggestionEnabled"
         static let cellBackgroundColor = "sync_cellBackgroundColor"
+        static let liveActivityProgressBarWidth = "sync_liveActivityProgressBarWidth"
         
         // 탐구과목 선택은 동적으로 처리 (기존 로직 유지)
         static func selectedSubjectKey(for className: String) -> String {
@@ -65,6 +66,14 @@ class iCloudSyncService: ObservableObject {
             keyValueStore.set(colorData, forKey: SyncKeys.cellBackgroundColor)
         }
         
+        // 라이브 액티비티 진행 바 너비
+        let progressBarWidth = userDefaults.double(forKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth)
+        if progressBarWidth > 0 {
+            keyValueStore.set(progressBarWidth, forKey: SyncKeys.liveActivityProgressBarWidth)
+        } else {
+            keyValueStore.set(60.0, forKey: SyncKeys.liveActivityProgressBarWidth) // 기본값 60.0
+        }
+        
         // 탐구과목 선택사항들 (기존 로직에 따라 동적으로 처리)
         syncAllSubjectSelections()
         
@@ -108,6 +117,12 @@ class iCloudSyncService: ObservableObject {
         // 셀 배경색
         if let colorData = keyValueStore.data(forKey: SyncKeys.cellBackgroundColor) {
             userDefaults.set(colorData, forKey: AppConstants.UserDefaultsKeys.cellBackgroundColor)
+        }
+        
+        // 라이브 액티비티 진행 바 너비
+        let progressBarWidth = keyValueStore.double(forKey: SyncKeys.liveActivityProgressBarWidth)
+        if progressBarWidth > 0 {
+            userDefaults.set(progressBarWidth, forKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth)
         }
         
         // 탐구과목 선택사항들 (기존 로직에 따라 동적으로 복원)
@@ -177,6 +192,12 @@ class iCloudSyncService: ObservableObject {
             case SyncKeys.cellBackgroundColor:
                 if let colorData = keyValueStore.data(forKey: key) {
                     userDefaults.set(colorData, forKey: AppConstants.UserDefaultsKeys.cellBackgroundColor)
+                }
+                
+            case SyncKeys.liveActivityProgressBarWidth:
+                let progressBarWidth = keyValueStore.double(forKey: key)
+                if progressBarWidth > 0 {
+                    userDefaults.set(progressBarWidth, forKey: AppConstants.UserDefaultsKeys.liveActivityProgressBarWidth)
                 }
                 
             default:
